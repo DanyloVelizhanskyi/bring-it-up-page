@@ -98,7 +98,7 @@ export default class Form {
                 statusMessage.style.cssText = `
                     margin-top: 15px;
                     font-size: 18px;
-                    color: grey;
+                    color: #9ec73d;
                 `;
                 form.parentNode.appendChild(statusMessage);
 
