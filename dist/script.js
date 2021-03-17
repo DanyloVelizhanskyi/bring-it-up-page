@@ -5059,8 +5059,8 @@ window.addEventListener('DOMContentLoaded', function () {
     activeClass: 'feed__item-active'
   });
   feedSlider.init();
-  var player = new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.showup .play', '.overlay');
-  player.init();
+  new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.showup .play', '.overlay').init();
+  new _modules_playVideo__WEBPACK_IMPORTED_MODULE_2__["default"]('.module__video-item .play', '.overlay').init();
   new _modules_difference__WEBPACK_IMPORTED_MODULE_3__["default"]('.officerold', '.officernew', '.officer__card-item').init();
   new _modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"]('.form').init();
 });
@@ -5373,10 +5373,18 @@ function () {
         btn.addEventListener('click', function () {
           if (document.querySelector('iframe#frame')) {
             _this.overlay.style.display = 'flex';
-          } else {
-            var path = btn.getAttribute('data-url');
 
-            _this.createPlayer(path);
+            if (_this.path !== btn.getAttribute('data-url')) {
+              _this.path = btn.getAttribute('data-url');
+
+              _this.player.loadVideoById({
+                videoId: _this.path
+              });
+            }
+          } else {
+            _this.path = btn.getAttribute('data-url');
+
+            _this.createPlayer(_this.path);
           }
         });
       });
@@ -5406,12 +5414,14 @@ function () {
   }, {
     key: "init",
     value: function init() {
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      this.bindTriggers();
-      this.bindCloseBtn();
+      if (this.btns.lenght > 0) {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        this.bindTriggers();
+        this.bindCloseBtn();
+      }
     }
   }]);
 
@@ -5658,10 +5668,24 @@ var MiniSlider =
 function (_Slider) {
   _inherits(MiniSlider, _Slider);
 
-  function MiniSlider(container, next, prev, activeClass, animate, autoplay) {
+  function MiniSlider(_ref) {
+    var container = _ref.container,
+        next = _ref.next,
+        prev = _ref.prev,
+        activeClass = _ref.activeClass,
+        animate = _ref.animate,
+        autoplay = _ref.autoplay;
+
     _classCallCheck(this, MiniSlider);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MiniSlider).call(this, container, next, prev, activeClass, animate, autoplay));
+    return _possibleConstructorReturn(this, _getPrototypeOf(MiniSlider).call(this, {
+      container: container,
+      next: next,
+      prev: prev,
+      activeClass: activeClass,
+      animate: animate,
+      autoplay: autoplay
+    }));
   }
 
   _createClass(MiniSlider, [{
@@ -5706,21 +5730,25 @@ function (_Slider) {
     value: function bindTriggers() {
       var _this2 = this;
 
-      this.next.addEventListener('click', function () {
-        return _this2.nextSlide();
+      this.next.forEach(function (item) {
+        item.addEventListener('click', function () {
+          return _this2.nextSlide();
+        });
       });
-      this.prev.addEventListener('click', function () {
-        for (var i = _this2.slides.length - 1; i > 0; i--) {
-          if (_this2.slides[i].tagName !== 'BUTTON') {
-            var active = _this2.slides[i];
+      this.prev.forEach(function (item) {
+        item.addEventListener('click', function () {
+          for (var i = _this2.slides.length - 1; i > 0; i--) {
+            if (_this2.slides[i].tagName !== 'BUTTON') {
+              var active = _this2.slides[i];
 
-            _this2.container.insertBefore(active, _this2.slides[0]);
+              _this2.container.insertBefore(active, _this2.slides[0]);
 
-            _this2.decorizeSlides();
+              _this2.decorizeSlides();
 
-            break;
+              break;
+            }
           }
-        }
+        });
       });
     }
   }, {
@@ -5734,11 +5762,15 @@ function (_Slider) {
       this.slides[0].parentNode.addEventListener('mouseenter', function () {
         clearInterval(autoplay);
       });
-      this.next.addEventListener('mouseenter', function () {
-        clearInterval(autoplay);
+      this.next.forEach(function (item) {
+        item.addEventListener('mouseenter', function () {
+          clearInterval(autoplay);
+        });
       });
-      this.prev.addEventListener('mouseenter', function () {
-        clearInterval(autoplay);
+      this.prev.forEach(function (item) {
+        item.addEventListener('mouseenter', function () {
+          clearInterval(autoplay);
+        });
       });
     }
   }, {
@@ -5756,11 +5788,15 @@ function (_Slider) {
           this.slides[0].parentNode.addEventListener('mouseleave', function () {
             _this4.autoplaySlides();
           });
-          this.next.addEventListener('mouseleave', function () {
-            _this4.autoplaySlides();
+          this.next.forEach(function (item) {
+            item.addEventListener('mouseleave', function () {
+              _this4.autoplaySlides();
+            });
           });
-          this.prev.addEventListener('mouseleave', function () {
-            _this4.autoplaySlides();
+          this.prev.forEach(function (item) {
+            item.addEventListener('mouseleave', function () {
+              _this4.autoplaySlides();
+            });
           });
         }
       } catch (e) {}
