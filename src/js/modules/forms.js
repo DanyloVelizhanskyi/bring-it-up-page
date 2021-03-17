@@ -1,6 +1,6 @@
 export default class Form {
     constructor(forms) {
-       this.forms = document.querySelector(forms);
+       this.forms = document.querySelectorAll(forms);
        this.inputs = document.querySelectorAll('input');
        this.message = {
          loading: 'Loading...',
